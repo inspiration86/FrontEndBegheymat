@@ -1,0 +1,156 @@
+<p-tabView>
+
+  <p-tabPanel>
+    <ng-template pTemplate="header"><i class="pi pi-unlock p-pl-3 text-white" style="font-size: 1rem"></i>تغییر رمز عبور
+    </ng-template>
+    <form [formGroup]="passwordForm" dir="rtl">
+      <p-panel styleClass="mb-3 pt-2 text-right" dir="rtl">
+        <p-header>
+          <p class="text-right titlePanel">تغییر رمز عبور</p>
+          <p class="subTitlePanel text-right">جهت تغییر کلمه عبور میتوانید با وارد نمودن اطلاعات زیر انجام دهید .</p>
+        </p-header>
+
+        <div class="p-fluid p-formgrid p-grid">
+          <div class="p-field p-col">
+            <label for="password">کلمه عبور جدید</label>
+
+            <span class="p-input-icon-left">
+              <i class="pi pi-eye"
+                 (click)="(originalPass.type === 'password')? originalPass.type = 'text' : originalPass.type = 'password' "></i>
+              <input id="password" type="password" #originalPass pInputText formControlName="password"/>
+            </span>
+            <ul class="mt-1 text-right list-inline"
+                *ngFor="let error of passwordErrorMessages.password">
+              <li class="font-small text-danger font-title-bold list-inline-item"
+                  *ngIf="passwordForm.get('password').hasError(error.type)
+                            && (passwordForm.get('password').dirty
+                            || passwordForm.get('password').touched)">
+                {{ error.message }}
+              </li>
+            </ul>
+          </div>
+          <div class="p-field p-col">
+            <label for="confirmPassword">تکرار کلمه عبور جدید:</label>
+            <span class="p-input-icon-left">
+              <i class="pi pi-eye"
+                 (click)="(confirmPass.type === 'password')? confirmPass.type = 'text' : confirmPass.type = 'password' "></i>
+              <input id="confirmPassword" type="password" #confirmPass pInputText formControlName="confirmPassword"/>
+            </span>
+            <ul class="mt-1 text-right list-inline"
+                *ngFor="let error of passwordErrorMessages.confirmPassword">
+              <li class="font-small text-danger font-title-bold list-inline-item"
+                  *ngIf="passwordForm.get('confirmPassword').hasError(error.type)
+                            && (passwordForm.get('confirmPassword').dirty
+                            || passwordForm.get('confirmPassword').touched)">
+                {{ error.message }}
+              </li>
+            </ul>
+            <ul class="mt-0">
+              <li class="font-small text-danger font-weight-bold"
+                  *ngIf="passwordForm.errors?.passwordNotMatch
+                            && (passwordForm.get('confirmPassword').dirty ||
+                            passwordForm.get('confirmPassword').touched)">
+                تکرار کلمه عبور مطابقت ندارد.
+              </li>
+            </ul>
+          </div>
+        </div>
+
+        <p-footer>
+          <button pButton label="تغییر رمز عبور " class="ui-button-success" icon="pi pi-check" iconPos="left"
+                  (click)="changePasswordUser()" [disabled]="passwordForm.invalid"></button>
+        </p-footer>
+      </p-panel>
+    </form>
+  </p-tabPanel>
+
+  <p-tabPanel>
+    <ng-template pTemplate="header"><i class="pi pi-unlock p-pl-3 text-white" style="font-size: 1rem"></i>تغییر نام
+      کاربری(شماره موبایل)
+    </ng-template>
+    <form [formGroup]="mobileForm" dir="rtl">
+      <p-panel styleClass="mb-3 pt-2 text-right" dir="rtl">
+        <p-header>
+          <p class="text-right titlePanel">تغییر تغییر نام کاربری(شماره موبایل)</p>
+          <p class="subTitlePanel text-right">جهت تغییرتغییر نام کاربری(شماره موبایل) میتوانید با وارد نمودن اطلاعات زیر
+            انجام دهید .</p>
+        </p-header>
+
+        <div class="p-fluid p-formgrid p-grid">
+          <div class="p-field p-col">
+            <label for="mobile">شماره موبایل جدید</label>
+            <input id="mobile" type="text" #pass pInputText formControlName="mobile"/>
+            <ul class="mt-1 text-right list-inline"
+                *ngFor="let error of mobileErrorMessages.mobile">
+              <li class="font-small text-danger font-title-bold list-inline-item"
+                  *ngIf="mobileForm.get('mobile').hasError(error.type)
+                            && (mobileForm.get('mobile').dirty
+                            || mobileForm.get('mobile').touched)">
+                {{ error.message }}
+              </li>
+            </ul>
+          </div>
+        </div>
+
+        <p-footer>
+          <button pButton label="ارسال کد" class="ui-button-success" icon="pi pi-check" iconPos="left"
+                  (click)="sendSMS()" [disabled]="mobileForm.invalid"></button>
+        </p-footer>
+      </p-panel>
+    </form>
+  </p-tabPanel>
+
+</p-tabView>
+<p-toast position="center" [baseZIndex]="5000"></p-toast>
+<p-dialog [(visible)]="displayBasic" [style]="{width: '30rem'}" [baseZIndex]="10000" dir="rtl">
+  <p-header>
+    <p class="mr-3">انجام شد</p>
+  </p-header>
+  <hr style="width: 100%;"/>
+  <p class="text-right text-success mt-2">مشخصات با موفقیت ویرایش شد</p>
+
+  <hr style="margin-bottom: -15px"/>
+  <ng-template pTemplate="footer">
+    <button pButton pRipple type="button" (click)="displayBasic=false" label="ادامه"
+            class="p-button-danger text-left"></button>
+  </ng-template>
+</p-dialog>
+
+<p-dialog [(visible)]="display">
+  <p-header class="headerPanel">
+    اعتبارسنجی شماره همراه
+  </p-header>
+  <div class="text-right">کد ارسال شده به شماره همراه در کادر زیر وارد
+    نمائید
+  </div>
+  <br>
+  <div class="ui-grid ui-grid-responsive ui-grid-pad ui-fluid ">
+    <div class="ui-grid-row dialog">
+
+      <div class="text-center pb-4">
+        مدت زمان باقیمانده:{{timeLeft}}
+      </div>
+      <div>
+        <ng-otp-input #ngOtpInput (onInputChange)="onOtpChange($event)"
+                      [config]="{length:6,allowNumbersOnly:true}"
+                      dir="ltr"
+                      style="font-family: IRANSansWeb" class="text-center"></ng-otp-input>
+        <!--        <p-inputMask mask="9999" class="inputSMS"></p-inputMask>-->
+      </div>
+    </div>
+  </div>
+  <div class="alert alert-danger mt-4 mb-3 text-center" *ngIf="invalidSMS" style="font-family: IRANSansWeb_Bold">کد وارد
+    شده اشتباه می باشد
+  </div>
+  <p-footer dir="rtl" class="text-left mt-5 ">
+    <button pButton (click)="changeMobile()" type="submit" class="p-button-info" label="ثبت"
+            cornerStyleClass="text-center" [disabled]="validationBtnPay"
+    ></button>
+    <button pButton type="submit" class="p-button-secondary" label="ارسال مجدد کد"
+            cornerStyleClass="text-center" (click)="sendSMS()" [disabled]="!resendSMS"
+    ></button>
+  </p-footer>
+</p-dialog>
+<ngx-spinner bdColor="rgba(0, 0, 0, 0.8)" size="medium" color="#ef2b2f" type="timer" [fullScreen]="true">
+  <p style="color: white"> منتظر بمانید </p>
+</ngx-spinner>

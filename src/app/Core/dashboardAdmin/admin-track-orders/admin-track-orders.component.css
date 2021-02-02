@@ -1,0 +1,9 @@
+:host ::ng-deep .p-inputgroup input:first-child {
+  border-top-left-radius: unset !important;
+  border-bottom-left-radius: unset !important;
+}
+
+:host ::ng-deep .p-inputgroup button:last-child, :host ::ng-deep .p-inputgroup input:last-child {
+  border-top-right-radius: unset !important;
+  border-bottom-right-radius: unset !important;
+}

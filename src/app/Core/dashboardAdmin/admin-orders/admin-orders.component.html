@@ -1,0 +1,63 @@
+<div class="pnl-content p-3">
+  <div class="box text-right" dir="rtl">
+    <p-table #dt
+             [value]="orders"
+             dataKey="id"
+             [rows]="5"
+             [showCurrentPageReport]="true"
+             [rowsPerPageOptions]="[10, 25, 50]"
+             [paginator]="true"
+             currentPageReportTemplate="نمایش {first} تا {last} از {totalRecords} صفحه"
+             [filterDelay]="0"
+             [globalFilterFields]="[
+          'User.mobile',
+          'question'
+        ]">
+      <ng-template pTemplate="caption">
+        <div class="table-header row">
+          <div class="col-sm-12">لیست سفارشات</div>
+        </div>
+        <div class="col-sm-12">
+              <span class="p-input-icon-left w-100 mt-3">
+                <i class="pi pi-search"></i>
+                <input
+                  pInputText
+                  type="text"
+                  class="w-100"
+                  (input)="dt.filterGlobal($event.target.value, 'contains')"
+                  placeholder="جستجو کلی"
+                />
+              </span>
+        </div>
+      </ng-template>
+      <ng-template pTemplate="header">
+        <tr class="title-table">
+          <th class="text-center" style="width: 50px;">ردیف</th>
+          <th class="text-center">محصول</th>
+          <th class="text-center">لوگو فروشنده</th>
+          <th class="text-center">فروشنده</th>
+
+          <th class="text-center">خریدار</th>
+          <th class="text-center">موبایل خریدار</th>
+          <th class="text-center">آدرس خریدار</th>
+
+          <th class="text-center">تعداد</th>
+          <th class="text-center">تاریخ و ساعت</th>
+          <th class="text-center">وضعیت</th>
+        </tr>
+      </ng-template>
+      <ng-template pTemplate="body" let-order let-rowIndex="rowIndex" let-expanded="expanded">
+        <tr>
+        </tr>
+
+      </ng-template>
+
+      <ng-template pTemplate="emptymessage">
+        <tr>
+          <td colspan="10">هیچ رکوردی یافت نشد.</td>
+        </tr>
+      </ng-template>
+    </p-table>
+
+  </div>
+</div>

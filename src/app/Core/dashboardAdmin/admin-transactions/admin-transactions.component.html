@@ -1,0 +1,143 @@
+
+<div class="pnl-content p-3">
+  <div class="box text-right" dir="rtl">
+    <p-tabView dir="rtl">
+      <p-tabPanel>
+        <ng-template pTemplate="header">
+          تراکنش های موفق
+        </ng-template>
+        <div dir="rtl">
+          <p-table #Sdt
+            [value]="successfulTransactions"
+            [rows]="10"
+            [showCurrentPageReport]="true"
+            [rowsPerPageOptions]="[10, 25, 50]"
+            [paginator]="true"
+            currentPageReportTemplate="نمایش {first} تا {last} از {totalRecords} صفحه"
+            [filterDelay]="0"
+            [globalFilterFields]="[
+          'mobile',
+          'refID',
+          'date',
+          'time',
+          'price'
+        ]"
+          >
+            <ng-template pTemplate="caption">
+              <div class="table-header row">
+                <div class="col-sm-12 text-right">لیست همه ی تراکنش های موفق</div>
+                <div class="col-sm-12">
+                    <span class="p-input-icon-left w-100 mt-3">
+                      <i class="pi pi-search"></i>
+                      <input
+                        pInputText
+                        type="text"
+                        class="w-100"
+                        (input)="
+                          Sdt.filterGlobal($event.target.value, 'contains')
+                        "
+                        placeholder="جستجو کلی"
+                      />
+                    </span>
+                </div>
+              </div>
+            </ng-template>
+
+            <ng-template pTemplate="header">
+              <tr class="title-table">
+                <th class="text-center">ردیف</th>
+                <th class="text-center">موبایل خریدار</th>
+                <th class="text-center">نام خریدار</th>
+                <th class="text-center">استان-شهر خریدار</th>
+                <th class="text-center">قیمت</th>
+                <th class="text-center">Ref ID</th>
+                <th class="text-center">تاریخ و ساعت</th>
+              </tr>
+            </ng-template>
+            <ng-template pTemplate="body" let-su let-rowIndex="rowIndex">
+              <tr>
+                <td class="text-center">{{ rowIndex + 1 }}</td>
+                <td class="text-center">{{ su.mobile }}</td>
+                <td class="text-center">{{ su.User[0].firstName + ' ' + su.User[0].lastName}}</td>
+                <td class="text-center">{{ su.User[0].state + '-' + su.User[0].city}}</td>
+                <td class="text-center">{{ su.price }}</td>
+                <td class="text-center">{{ su.refID }}</td>
+                <td class="text-center">{{ su.date + ' ' + su.time }}</td>
+              </tr>
+            </ng-template>
+          </p-table>
+        </div>
+      </p-tabPanel>
+
+      <p-tabPanel>
+        <ng-template pTemplate="header">
+          تراکنش های ناموفق
+        </ng-template>
+        <div dir="rtl">
+          <p-table #Udt
+            [value]="unsuccessfulTransactions"
+            [rows]="10"
+            [showCurrentPageReport]="true"
+            [rowsPerPageOptions]="[10, 25, 50]"
+            [paginator]="true"
+            currentPageReportTemplate="نمایش {first} تا {last} از {totalRecords} صفحه"
+            [filterDelay]="0"
+            [globalFilterFields]="[
+          'mobile',
+          'date',
+          'time',
+          'price'
+        ]"
+          >
+            <ng-template pTemplate="caption">
+              <div class="table-header row">
+                <div class="col-sm-12 text-right">لیست همه ی تراکنش های ناموفق</div>
+                <div class="col-sm-12">
+                    <span class="p-input-icon-left w-100 mt-3">
+                      <i class="pi pi-search"></i>
+                      <input
+                        pInputText
+                        type="text"
+                        class="w-100"
+                        (input)="
+                          Udt.filterGlobal($event.target.value, 'contains')
+                        "
+                        placeholder="جستجو کلی"
+                      />
+                    </span>
+                </div>
+              </div>
+            </ng-template>
+
+            <ng-template pTemplate="header">
+              <tr class="title-table">
+                <th class="text-center">ردیف</th>
+                <th class="text-center">موبایل خریدار</th>
+                <th class="text-center">نام خریدار</th>
+                <th class="text-center">استان-شهر خریدار</th>
+                <th class="text-center">قیمت</th>
+                <th class="text-center">تاریخ و ساعت</th>
+              </tr>
+            </ng-template>
+            <ng-template pTemplate="body" let-un let-rowIndex="rowIndex">
+              <tr>
+                <td class="text-center">{{ rowIndex + 1 }}</td>
+                <td class="text-center">{{ un.mobile }}</td>
+                <td class="text-center">{{ un.User[0].firstName + ' ' + un.User[0].lastName}}</td>
+                <td class="text-center">{{ un.User[0].state + '-' + un.User[0].city}}</td>
+                <td class="text-center">{{ un.price }}</td>
+                <td class="text-center">{{ un.date + ' ' + un.time }}</td>
+              </tr>
+            </ng-template>
+          </p-table>
+        </div>
+      </p-tabPanel>
+
+    </p-tabView>
+  </div>
+</div>
+
+
+
+
+

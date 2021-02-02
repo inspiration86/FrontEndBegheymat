@@ -1,0 +1,406 @@
+<p-toast position="center"></p-toast>
+
+
+<p-tabView dir="rtl">
+  <p-tabPanel>
+    <ng-template pTemplate="header"><i class="pi pi-user-edit p-pl-3 text-white" style="font-size: 1rem"></i> ویرایش
+      اطلاعات کاربری
+    </ng-template>
+    <form [formGroup]="form" dir="rtl">
+      <p-panel styleClass="mb-3 pt-2 text-right" dir="rtl">
+        <p-header>
+          <p class="text-right titlePanel">اطلاعات و مشخصات کاربری</p>
+          <p class="subTitlePanel">لطفا مشخصات خود را کامل و دقیق وارد نمایید</p>
+        </p-header>
+        <div class="p-fluid p-formgrid p-grid">
+          <div class="p-field p-col">
+            <label for="firstName">نام</label>
+            <input id="firstName" type="text" pInputText formControlName="firstName" [(ngModel)]="user.firstName">
+            <!--            <ul class="mt-1 text-right list-inline"-->
+            <!--                *ngFor="let error of errorMessages.firstName">-->
+            <!--              <li class="font-small text-danger font-title-bold list-inline-item"-->
+            <!--                  *ngIf="form.get('firstName').hasError(error.type)-->
+            <!--                            && (form.get('firstName').dirty-->
+            <!--                            || form.get('firstName').touched)">-->
+            <!--                {{ error.message }}-->
+            <!--              </li>-->
+            <!--            </ul>-->
+          </div>
+          <div class="p-field p-col">
+            <label for="lastName">نام خانوادگی</label>
+            <input id="lastName" type="text" pInputText formControlName="lastName" [(ngModel)]="user.lastName">
+            <ul class="mt-1 text-right list-inline"
+                *ngFor="let error of errorMessages.lastName">
+              <li class="font-small text-danger font-title-bold list-inline-item"
+                  *ngIf="form.get('lastName').hasError(error.type)
+                            && (form.get('lastName').dirty
+                            || form.get('lastName').touched)">
+                {{ error.message }}
+              </li>
+            </ul>
+          </div>
+        </div>
+        <div class="p-fluid p-formgrid p-grid">
+          <div class="p-field p-col">
+            <label for="nationalCode">کد ملی</label>
+            <input id="nationalCode" type="text" pInputText formControlName="nationalCode" minlength="10" maxlength="10"
+                   [(ngModel)]="user.nationalCode">
+            <ul class="mt-1 text-right list-inline"
+                *ngFor="let error of errorMessages.nationalCode">
+              <li class="font-small text-danger font-title-bold list-inline-item"
+                  *ngIf="form.get('nationalCode').hasError(error.type)
+                            && (form.get('nationalCode').dirty
+                            || form.get('nationalCode').touched)">
+                {{ error.message }}
+              </li>
+            </ul>
+          </div>
+        </div>
+        <div class="p-fluid p-formgrid p-grid">
+          <div class="p-field p-col">
+            <label>آپلود تصویر</label>
+            <p-fileUpload
+              chooseLabel="انتخاب تصویر"
+              uploadLabel="آپلود تصویر"
+              cancelLabel="انصراف"
+              customUpload="true"
+              (uploadHandler)="imageUploader($event)"
+              invalidFileSizeMessageDetail="حداکثر سایز فایل 2 مگابایت می باشد"
+              invalidFileSizeMessageSummary="اندازه فایل بیش از حد مجاز می باشد"
+              accept="image/jpeg,image/png" maxFileSize="2000000">
+            </p-fileUpload>
+            <ul class="mt-1 text-right list-inline"
+                *ngFor="let error of errorMessages.image">
+              <li class="font-small text-danger font-weight-bold list-inline-item"
+                  *ngIf="form.get('image').hasError(error.type)
+                            && (form.get('image').dirty
+                            || form.get('image').touched)">
+                {{ error.message }}
+              </li>
+            </ul>
+          </div>
+
+          <div class="p-field p-col" *ngIf="user.image !== null">
+            <label class="d-block">تصویر فعلی</label>
+            <img [src]="user.image" class="img-fluid" width="150">
+          </div>
+
+        </div>
+      </p-panel>
+      <p-panel styleClass="mb-3 pt-2 text-right" dir="rtl">
+        <p-header>
+          <p class="text-right titlePanel">آدرس </p>
+          <p class="subTitlePanel text-right">لطفاً آدرس خود را جهت تسهیل در ثبت سفارش ثبت نمایید .</p>
+        </p-header>
+
+        <div class="p-fluid p-formgrid p-grid">
+          <div class="p-field p-col">
+            <label class="d-block">استان</label>
+
+            <p-dropdown
+              appendTo="body"
+              emptyFilterMessage="نتیجه ای یافت نشد"
+              [options]="states"
+              (onChange)="stateOnChange(form.controls['state'].value.code)"
+              formControlName="state"
+              optionLabel="name"
+              [filter]="true"
+            >
+              <ng-template pTemplate="selectedItem">
+                <div
+                  class="city-item city-item-value"
+                  *ngIf="form.controls['state'].value"
+                >
+                  <div>{{ form.controls["state"].value.name }}</div>
+                </div>
+              </ng-template>
+              <ng-template let-state pTemplate="item">
+                <div class="city-item text-right">
+                  <div class="text-right">{{ state.name }}</div>
+                </div>
+              </ng-template>
+            </p-dropdown>
+            <ul class="mt-1 text-right list-inline"
+                *ngFor="let error of errorMessages.state">
+              <li class="font-small text-danger font-title-bold list-inline-item"
+                  *ngIf="form.get('state').hasError(error.type)
+                            && (form.get('state').dirty
+                            || form.get('state').touched)">
+                {{ error.message }}
+              </li>
+            </ul>
+          </div>
+          <div class="p-field p-col">
+            <label class="d-block">شهر</label>
+            <p-dropdown
+              appendTo="body"
+              emptyFilterMessage="نتیجه ای یافت نشد"
+              [options]="cities"
+              formControlName="city"
+              optionLabel="name"
+              [filter]="true"
+            >
+              <ng-template pTemplate="selectedItem">
+                <div
+                  class="city-item city-item-value"
+                  *ngIf="form.controls['city'].value"
+                >
+                  <div>{{ form.controls["city"].value.name }}</div>
+                </div>
+              </ng-template>
+              <ng-template let-city pTemplate="item">
+                <div class="city-item text-right">
+                  <div class="text-right">{{ city.name }}</div>
+                </div>
+              </ng-template>
+            </p-dropdown>
+
+            <ul class="mt-1 text-right list-inline"
+                *ngFor="let error of errorMessages.city">
+              <li class="font-small text-danger font-title-bold list-inline-item"
+                  *ngIf="form.get('city').hasError(error.type)
+                            && (form.get('city').dirty
+                            || form.get('city').touched)">
+                {{ error.message }}
+              </li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="p-fluid p-formgrid p-grid">
+          <div class="p-field p-col">
+            <label for="postalCode">کدپستی</label>
+            <input id="postalCode" type="text" pInputText formControlName="postalCode" minlength="10" maxlength="10"
+                   [(ngModel)]="user.postalCode">
+            <ul class="mt-1 text-right list-inline"
+                *ngFor="let error of errorMessages.postalCode">
+              <li class="font-small text-danger font-title-bold list-inline-item"
+                  *ngIf="form.get('postalCode').hasError(error.type)
+                            && (form.get('postalCode').dirty
+                            || form.get('postalCode').touched)">
+                {{ error.message }}
+              </li>
+            </ul>
+          </div>
+
+          <div class="p-field p-col">
+            <label for="phone">تلفن ثابت</label>
+            <input id="phone" type="text" pInputText formControlName="phone" minlength="11" maxlength="11"
+                   [(ngModel)]="user.phone">
+            <ul class="mt-1 text-right list-inline"
+                *ngFor="let error of errorMessages.phone">
+              <li class="font-small text-danger font-title-bold list-inline-item"
+                  *ngIf="form.get('phone').hasError(error.type)
+                            && (form.get('phone').dirty
+                            || form.get('phone').touched)">
+                {{ error.message }}
+              </li>
+            </ul>
+          </div>
+        </div>
+        <div class="p-fluid p-formgrid p-grid">
+          <div class="p-field p-col">
+            <label for="address">آدرس</label>
+            <textarea id="address" [rows]="5" [cols]="30" pInputTextarea formControlName="address"
+                      [(ngModel)]="user.address"></textarea>
+            <ul class="mt-1 text-right list-inline"
+                *ngFor="let error of errorMessages.address">
+              <li class="font-small text-danger font-title-bold list-inline-item"
+                  *ngIf="form.get('address').hasError(error.type)
+                            && (form.get('address').dirty
+                            || form.get('address').touched)">
+                {{ error.message }}
+              </li>
+            </ul>
+          </div>
+        </div>
+      </p-panel>
+      <p-panel styleClass="mb-3 pt-2 text-right" dir="rtl">
+        <p-header>
+          <p class="text-right titlePanel">شماره کارت بانکی </p>
+          <p class="subTitlePanel text-right">لطفاً مشخصات بانکی خود را جهت تسهیل در برگشت هزینه، ثبت نمایید .</p>
+        </p-header>
+        <div class="p-fluid p-formgrid p-grid">
+          <div class="p-field p-col">
+            <label for="accountNumber">شماره حساب</label>
+            <input id="accountNumber" type="text" pInputText formControlName="accountNumber"
+                   [(ngModel)]="user.accountNumber">
+          </div>
+          <div class="p-field p-col">
+            <label for="cardNumber">شماره کارت</label>
+            <input id="cardNumber" type="text" pInputText formControlName="cardNumber" minlength="12" maxlength="16"
+                   [(ngModel)]="user.cardNumber">
+            <ul class="mt-1 text-right list-inline"
+                *ngFor="let error of errorMessages.cardNumber">
+              <li class="font-small text-danger font-title-bold list-inline-item"
+                  *ngIf="form.get('cardNumber').hasError(error.type)
+                            && (form.get('cardNumber').dirty
+                            || form.get('cardNumber').touched)">
+                {{ error.message }}
+              </li>
+            </ul>
+
+          </div>
+        </div>
+        <p-footer>
+          <button pButton label="ثبت مشخصات" class="ui-button-success" icon="pi pi-check" iconPos="left"
+                  (click)="updateUser()" [disabled]="form.invalid"></button>
+        </p-footer>
+      </p-panel>
+    </form>
+
+  </p-tabPanel>
+  <p-tabPanel>
+    <ng-template pTemplate="header"><i class="pi pi-unlock p-pl-3 text-white" style="font-size: 1rem"></i>تغییر رمز عبور
+    </ng-template>
+    <form [formGroup]="passwordForm" dir="rtl">
+      <p-panel styleClass="mb-3 pt-2 text-right" dir="rtl">
+        <p-header>
+          <p class="text-right titlePanel">تغییر رمز عبور</p>
+          <p class="subTitlePanel text-right">جهت تغییر کلمه عبور میتوانید با وارد نمودن اطلاعات زیر انجام دهید .</p>
+        </p-header>
+
+        <div class="p-fluid p-formgrid p-grid">
+          <div class="p-field p-col">
+            <label for="password">کلمه عبور جدید</label>
+
+            <span class="p-input-icon-left">
+              <i class="pi pi-eye"
+                 (click)="(originalPass.type === 'password')? originalPass.type = 'text' : originalPass.type = 'password' "></i>
+              <input id="password" type="password" #originalPass pInputText formControlName="password"/>
+            </span>
+            <ul class="mt-1 text-right list-inline"
+                *ngFor="let error of passwordErrorMessages.password">
+              <li class="font-small text-danger font-title-bold list-inline-item"
+                  *ngIf="passwordForm.get('password').hasError(error.type)
+                            && (passwordForm.get('password').dirty
+                            || passwordForm.get('password').touched)">
+                {{ error.message }}
+              </li>
+            </ul>
+          </div>
+          <div class="p-field p-col">
+            <label for="confirmPassword">تکرار کلمه عبور جدید:</label>
+            <span class="p-input-icon-left">
+              <i class="pi pi-eye"
+                 (click)="(confirmPass.type === 'password')? confirmPass.type = 'text' : confirmPass.type = 'password' "></i>
+              <input id="confirmPassword" type="password" #confirmPass pInputText formControlName="confirmPassword"/>
+            </span>
+            <ul class="mt-1 text-right list-inline"
+                *ngFor="let error of passwordErrorMessages.confirmPassword">
+              <li class="font-small text-danger font-title-bold list-inline-item"
+                  *ngIf="passwordForm.get('confirmPassword').hasError(error.type)
+                            && (passwordForm.get('confirmPassword').dirty
+                            || passwordForm.get('confirmPassword').touched)">
+                {{ error.message }}
+              </li>
+            </ul>
+            <ul class="mt-0">
+              <li class="font-small text-danger font-weight-bold"
+                  *ngIf="passwordForm.errors?.passwordNotMatch
+                            && (passwordForm.get('confirmPassword').dirty ||
+                            passwordForm.get('confirmPassword').touched)">
+                تکرار کلمه عبور مطابقت ندارد.
+              </li>
+            </ul>
+          </div>
+        </div>
+
+        <p-footer>
+          <button pButton label="تغییر رمز عبور " class="ui-button-success" icon="pi pi-check" iconPos="left"
+                  (click)="changePasswordUser()" [disabled]="passwordForm.invalid"></button>
+        </p-footer>
+      </p-panel>
+    </form>
+  </p-tabPanel>
+
+  <p-tabPanel>
+    <ng-template pTemplate="header"><i class="pi pi-unlock p-pl-3 text-white" style="font-size: 1rem"></i>تغییر نام
+      کاربری(شماره موبایل)
+    </ng-template>
+    <form [formGroup]="mobileForm" dir="rtl">
+      <p-panel styleClass="mb-3 pt-2 text-right" dir="rtl">
+        <p-header>
+          <p class="text-right titlePanel">تغییر تغییر نام کاربری(شماره موبایل)</p>
+          <p class="subTitlePanel text-right">جهت تغییرتغییر نام کاربری(شماره موبایل) میتوانید با وارد نمودن اطلاعات زیر
+            انجام دهید .</p>
+        </p-header>
+
+        <div class="p-fluid p-formgrid p-grid">
+          <div class="p-field p-col">
+            <label for="mobile">شماره موبایل جدید</label>
+            <input id="mobile" type="text" #pass pInputText formControlName="mobile"/>
+            <ul class="mt-1 text-right list-inline"
+                *ngFor="let error of mobileErrorMessages.mobile">
+              <li class="font-small text-danger font-title-bold list-inline-item"
+                  *ngIf="mobileForm.get('mobile').hasError(error.type)
+                            && (mobileForm.get('mobile').dirty
+                            || mobileForm.get('mobile').touched)">
+                {{ error.message }}
+              </li>
+            </ul>
+          </div>
+        </div>
+
+        <p-footer>
+          <button pButton label="ارسال کد" class="ui-button-success" icon="pi pi-check" iconPos="left"
+                  (click)="sendSMS()" [disabled]="mobileForm.invalid"></button>
+        </p-footer>
+      </p-panel>
+    </form>
+  </p-tabPanel>
+
+</p-tabView>
+
+<p-dialog [(visible)]="displayBasic" [style]="{width: '30rem'}" [baseZIndex]="10000" dir="rtl">
+  <p-header>
+    <p class="mr-3">انجام شد</p>
+  </p-header>
+  <hr style="width: 100%;"/>
+  <p class="text-right text-success mt-2">مشخصات با موفقیت ویرایش شد</p>
+
+  <hr style="margin-bottom: -15px"/>
+  <ng-template pTemplate="footer">
+    <button pButton pRipple type="button" (click)="displayBasic=false" label="ادامه"
+            class="p-button-danger text-left"></button>
+  </ng-template>
+</p-dialog>
+
+<p-dialog [(visible)]="display">
+  <p-header class="headerPanel">
+    اعتبارسنجی شماره همراه
+  </p-header>
+  <div class="text-right">کد ارسال شده به شماره همراه در کادر زیر وارد
+    نمائید
+  </div>
+  <br>
+  <div class="ui-grid ui-grid-responsive ui-grid-pad ui-fluid ">
+    <div class="ui-grid-row dialog">
+
+      <div class="text-center pb-4">
+        مدت زمان باقیمانده:{{timeLeft}}
+      </div>
+      <div>
+        <ng-otp-input #ngOtpInput (onInputChange)="onOtpChange($event)"
+                      [config]="{length:6,allowNumbersOnly:true}"
+                      dir="ltr"
+                      style="font-family: IRANSansWeb" class="text-center"></ng-otp-input>
+        <!--        <p-inputMask mask="9999" class="inputSMS"></p-inputMask>-->
+      </div>
+    </div>
+  </div>
+  <div class="alert alert-danger mt-4 mb-3 text-center" *ngIf="invalidSMS" style="font-family: IRANSansWeb_Bold">کد وارد
+    شده اشتباه می باشد
+  </div>
+  <p-footer dir="rtl" class="text-left mt-5 ">
+    <button pButton (click)="changeMobile()" type="submit" class="p-button-info" label="ثبت"
+            cornerStyleClass="text-center" [disabled]="validationBtnPay"
+    ></button>
+    <button pButton type="submit" class="p-button-secondary" label="ارسال مجدد کد"
+            cornerStyleClass="text-center" (click)="sendSMS()" [disabled]="!resendSMS"
+    ></button>
+  </p-footer>
+</p-dialog>
+<ngx-spinner bdColor="rgba(0, 0, 0, 0.8)" size="medium" color="#ef2b2f" type="timer" [fullScreen]="true">
+  <p style="color: white"> منتظر بمانید </p>
+</ngx-spinner>

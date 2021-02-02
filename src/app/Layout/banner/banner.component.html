@@ -1,0 +1,11 @@
+<div class="container-fluid mt-5">
+  <div class="row">
+    <div class="col-lg-4 col-md-6 col-sm-1 mb-3" *ngFor="let i of banners">
+          <a [href]="i['link']" target="_blank">
+            <div class="image">
+              <img [src]="i['imageurl']" alt="i['tag']" class="d-block img-fluid mx-auto"  style="border-radius: 15px">
+            </div>
+          </a>
+    </div>
+  </div>
+</div>
